@@ -3,6 +3,7 @@ package br.com.pelegrino.money.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,7 @@ public class FormaPagamento implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_conta_receber")
 	private Long id;
 	
+	@Column(nullable = false)
 	private String descricao;
 
 	public Long getId() {

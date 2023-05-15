@@ -1,4 +1,4 @@
-package br.com.pelegrino.money.model;
+	package br.com.pelegrino.money.model;
 
 import java.io.Serializable;
 
