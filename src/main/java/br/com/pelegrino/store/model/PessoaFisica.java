@@ -1,4 +1,4 @@
-package br.com.pelegrino.money.model;
+package br.com.pelegrino.store.model;
 
 import java.util.Date;
 

@@ -1,9 +1,9 @@
-package br.com.pelegrino.money.model;
+package br.com.pelegrino.store.model;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-import br.com.pelegrino.money.enums.TipoEndereco;
+import br.com.pelegrino.store.enums.TipoEndereco;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;

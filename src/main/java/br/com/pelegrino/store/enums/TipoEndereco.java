@@ -1,4 +1,4 @@
-package br.com.pelegrino.money.enums;
+package br.com.pelegrino.store.enums;
 
 public enum TipoEndereco {
 	

@@ -1,16 +1,15 @@
-package br.com.pelegrino.money.enums;
+package br.com.pelegrino.store.enums;
 
-public enum StatusContaPagar {
+public enum StatusContaReceber {
 
 	COBRANCA("Pagar"),
 	VENCIDA("Vencida"),
 	ABERTA("Aberta"),
-	QUITADA("Quitada"),
-	RENEGOCIADA("Renegociada");
+	QUITADA("Quitada");
 	
 	private String descricao;
 	
-	StatusContaPagar(String descricao) {
+	StatusContaReceber(String descricao) {
 		this.descricao = descricao;
 	}
 	

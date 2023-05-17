@@ -1,4 +1,4 @@
-package br.com.pelegrino.money.model;
+package br.com.pelegrino.store.model;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -12,20 +12,19 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "categoria_produto")
-@SequenceGenerator(name = "seq_categoria_produto", sequenceName = "seq_categoria_produto", allocationSize = 1, initialValue = 1)
-public class CategoriaProduto implements Serializable {
+@Table(name = "forma_pagamento")
+@SequenceGenerator(name = "seq_forma_pagamento", sequenceName = "seq_forma_pagamento", allocationSize = 1, initialValue = 1)
+public class FormaPagamento implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_categoria_produto")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_conta_receber")
 	private Long id;
-
-	@Column(name = "nome_desc", nullable = false)
-	private String nomeDesc;
-
 	
+	@Column(nullable = false)
+	private String descricao;
+
 	public Long getId() {
 		return id;
 	}
@@ -34,12 +33,12 @@ public class CategoriaProduto implements Serializable {
 		this.id = id;
 	}
 
-	public String getNomeDesc() {
-		return nomeDesc;
+	public String getDescricao() {
+		return descricao;
 	}
 
-	public void setNomeDesc(String nomeDesc) {
-		this.nomeDesc = nomeDesc;
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	@Override
@@ -55,8 +54,8 @@ public class CategoriaProduto implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CategoriaProduto other = (CategoriaProduto) obj;
+		FormaPagamento other = (FormaPagamento) obj;
 		return Objects.equals(id, other.id);
 	}
-
+	
 }

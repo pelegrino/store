@@ -1,11 +1,11 @@
-package br.com.pelegrino.money.model;
+package br.com.pelegrino.store.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
-import br.com.pelegrino.money.enums.StatusContaPagar;
+import br.com.pelegrino.store.enums.StatusContaReceber;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -23,14 +23,14 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name = "conta_pagar")
-@SequenceGenerator(name = "seq_conta_pagar", sequenceName = "seq_conta_pagar", allocationSize = 1, initialValue = 1)
-public class ContaPagar implements Serializable {
+@Table(name = "conta_receber")
+@SequenceGenerator(name = "seq_conta_receber", sequenceName = "seq_conta_receber", allocationSize = 1, initialValue = 1)
+public class ContaReceber implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_conta_pagar")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_conta_receber")
 	private Long id;
 	
 	@Column(nullable = false)
@@ -38,7 +38,7 @@ public class ContaPagar implements Serializable {
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private StatusContaPagar status;
+	private StatusContaReceber status;
 	
 	@Column(nullable = false)
 	@Temporal(TemporalType.DATE)
@@ -53,25 +53,8 @@ public class ContaPagar implements Serializable {
 	private BigDecimal valorDesconto;
 	
 	@ManyToOne(targetEntity = Pessoa.class)
-	@JoinColumn(name = "pessoa_id", 
-				nullable = false, 
-				foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
+	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
 	private Pessoa pessoa;
-	
-	@ManyToOne(targetEntity = Pessoa.class)
-	@JoinColumn(name = "pessoa_forn_id", 
-				nullable = false, 
-				foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_forn_fk"))
-	private Pessoa pessoa_fornecedor;
-	
-
-	public Pessoa getPessoa_fornecedor() {
-		return pessoa_fornecedor;
-	}
-
-	public void setPessoa_fornecedor(Pessoa pessoa_fornecedor) {
-		this.pessoa_fornecedor = pessoa_fornecedor;
-	}
 
 	public Long getId() {
 		return id;
@@ -89,11 +72,11 @@ public class ContaPagar implements Serializable {
 		this.descricao = descricao;
 	}
 
-	public StatusContaPagar getStatus() {
+	public StatusContaReceber getStatus() {
 		return status;
 	}
 
-	public void setStatus(StatusContaPagar status) {
+	public void setStatus(StatusContaReceber status) {
 		this.status = status;
 	}
 
@@ -150,7 +133,7 @@ public class ContaPagar implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ContaPagar other = (ContaPagar) obj;
+		ContaReceber other = (ContaReceber) obj;
 		return Objects.equals(id, other.id);
 	}
 	

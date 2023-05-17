@@ -1,4 +1,4 @@
-package br.com.pelegrino.money.model;
+package br.com.pelegrino.store.model;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -16,28 +16,39 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "item_venda_loja")
-@SequenceGenerator(name = "seq_item_venda_loja", sequenceName = "seq_item_venda_loja", allocationSize = 1, initialValue = 1)
-public class ItemVendaLoja implements Serializable {
+@Table(name = "avaliacao_produto")
+@SequenceGenerator(name = "seq_avaliacao_produto", sequenceName = "seq_avaliacao_produto", allocationSize = 1, initialValue = 1)
+public class AvaliacaoProduto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_item_venda_loja")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_avaliacao_produto")
 	private Long id;
-
+	
 	@Column(nullable = false)
-	private Double quantidade;
+	private String descricao;
+	
+	@Column(nullable = false)
+	private Integer nota;
+	
+	@ManyToOne(targetEntity = Pessoa.class)
+	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
+	private Pessoa pessoa;
 	
 	@ManyToOne
 	@JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))	
 	private Produto produto;
 	
-	@ManyToOne
-	@JoinColumn(name = "venda_compra_loja_virtual_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "venda_compra_loja_virtual_fk"))
-	private VendaCompraLojaVirtual vendaCompraLojaVirtual;
-	
 
+	public String getDescricao() {
+		return descricao;
+	}
+	
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -46,12 +57,20 @@ public class ItemVendaLoja implements Serializable {
 		this.id = id;
 	}
 
-	public Double getQuantidade() {
-		return quantidade;
+	public Integer getNota() {
+		return nota;
 	}
 
-	public void setQuantidade(Double quantidade) {
-		this.quantidade = quantidade;
+	public void setNota(Integer nota) {
+		this.nota = nota;
+	}
+
+	public Pessoa getPessoa() {
+		return pessoa;
+	}
+
+	public void setPessoa(Pessoa pessoa) {
+		this.pessoa = pessoa;
 	}
 
 	public Produto getProduto() {
@@ -60,14 +79,6 @@ public class ItemVendaLoja implements Serializable {
 
 	public void setProduto(Produto produto) {
 		this.produto = produto;
-	}
-
-	public VendaCompraLojaVirtual getVendaCompraLojaVirtual() {
-		return vendaCompraLojaVirtual;
-	}
-
-	public void setVendaCompraLojaVirtual(VendaCompraLojaVirtual vendaCompraLojaVirtual) {
-		this.vendaCompraLojaVirtual = vendaCompraLojaVirtual;
 	}
 
 	@Override
@@ -83,8 +94,8 @@ public class ItemVendaLoja implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ItemVendaLoja other = (ItemVendaLoja) obj;
+		AvaliacaoProduto other = (AvaliacaoProduto) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }
