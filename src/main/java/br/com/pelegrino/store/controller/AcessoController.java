@@ -37,6 +37,7 @@ public class AcessoController {
 		return new ResponseEntity<Acesso>(acessoSalvo, HttpStatus.OK);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@PostMapping(value = "/deleteAcesso")
 	public ResponseEntity<?> deleteAcesso(@RequestBody Acesso acesso) {
@@ -46,6 +47,7 @@ public class AcessoController {
 		return new ResponseEntity("Acesso Removido", HttpStatus.OK);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@DeleteMapping(value = "/deleteAcessoPorId/{id}")
 	public ResponseEntity<?> deleteAcessoPorId(@PathVariable("id") Long id) {
