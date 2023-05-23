@@ -83,6 +83,24 @@
 		    <artifactId>flyway-core</artifactId>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>5.0.7.RELEASE</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>5.0.7.RELEASE</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+		
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.7.0</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
