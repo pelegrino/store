@@ -2,11 +2,17 @@ package br.com.pelegrino.store.security;
 
 import java.sql.Date;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import br.com.pelegrino.store.ApplicationContextLoad;
+import br.com.pelegrino.store.model.Usuario;
+import br.com.pelegrino.store.repository.UsuarioRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -44,6 +50,37 @@ public class JWTTokenAutenticacaoService {
 		
 		//Usado para ver no Postman
 		response.getWriter().write("{\"Authorization\": \"" + token + "\"}");
+		
+	}
+	
+	//Retorna o usuário validado com o token
+	public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) {
+		
+		String token = request.getHeader(HEADER_STRING);
+		
+		if (token != null) {
+			
+			String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
+			
+			//Faz a validação do token e obter o usuário
+			String user = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(tokenLimpo).getBody().getSubject();
+			
+			if (user != null) {
+				
+				Usuario usuario = ApplicationContextLoad.getApplicationContext().getBean(UsuarioRepository.class).findUserByLogin(user);
+				
+				if (usuario != null) {
+					return new UsernamePasswordAuthenticationToken(
+							usuario.getLogin(), 
+							usuario.getSenha(),
+							usuario.getAuthorities());
+				}
+			}
+			
+		}
+	
+		liberacaoCors(response);
+		return null;
 		
 	}
 	
