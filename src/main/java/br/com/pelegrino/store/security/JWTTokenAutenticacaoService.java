@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import br.com.pelegrino.store.ApplicationContextLoad;
 import br.com.pelegrino.store.model.Usuario;
 import br.com.pelegrino.store.repository.UsuarioRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
@@ -23,7 +24,7 @@ import io.jsonwebtoken.SignatureException;
 @Component
 public class JWTTokenAutenticacaoService {
 	
-	//Token de validade de 10 dias
+	//Token de validade de 10 dias = 864000000
 	private static final long EXPIRATION_TIME = 864000000;
 	
 	//Chave de senha para juntar no JWT
@@ -90,6 +91,9 @@ public class JWTTokenAutenticacaoService {
 			
 		} catch (SignatureException e) {
 			response.getWriter().write("O token está inválido!");
+			
+		} catch (ExpiredJwtException e) {
+			response.getWriter().write("O token está expirado, efetue novo login!");
 			
 		} finally {
 			liberacaoCors(response);
