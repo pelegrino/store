@@ -22,6 +22,18 @@ import br.com.pelegrino.store.model.dto.ObjetoErroDTO;
 @ControllerAdvice
 public class ControleExcecoes extends ResponseEntityExceptionHandler {
 	
+	@ExceptionHandler(ExceptionStore.class)
+	public ResponseEntity<Object> handleExceptionCustom (ExceptionStore ex) {
+		ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+		
+		objetoErroDTO.setError(ex.getMessage());
+		objetoErroDTO.setCodError(HttpStatus.OK.toString());
+		
+		return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.OK);
+		
+	}
+	
+	
 	//Captura exceções do projeto
 	@ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
 	@Override
