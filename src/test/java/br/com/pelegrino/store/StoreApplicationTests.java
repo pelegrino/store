@@ -185,7 +185,7 @@ class StoreApplicationTests extends TestCase {
 	
 	// Testes com JUnit
 	@Test
-	public void cadastroAcesso() {
+	public void cadastroAcesso() throws ExceptionStore {
 
 		Acesso acesso = new Acesso();
 
