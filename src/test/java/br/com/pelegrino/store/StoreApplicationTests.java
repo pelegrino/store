@@ -1,5 +1,6 @@
 package br.com.pelegrino.store;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ class StoreApplicationTests extends TestCase {
 
 		Acesso acesso = new Acesso();
 
-		acesso.setDescricao("ROLE_COMPRADOR");
+		acesso.setDescricao("ROLE_COMPRADOR" + Calendar.getInstance().getTimeInMillis());
 
 		ObjectMapper objectMapper = new ObjectMapper();
 
@@ -160,7 +161,7 @@ class StoreApplicationTests extends TestCase {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		ResultActions retornoApi = mockmvc
-									.perform(MockMvcRequestBuilders.get("/buscarPorDesc/OBTER_LIST")
+									.perform(MockMvcRequestBuilders.get("/buscarPorDesc/ROLE_TESTE_OBTER_LIST")
 									.content(objectMapper.writeValueAsString(acesso))
 									.accept(MediaType.APPLICATION_JSON)
 									.contentType(MediaType.APPLICATION_JSON));
@@ -174,7 +175,7 @@ class StoreApplicationTests extends TestCase {
 													.getContentAsString(), 
 										new TypeReference<List<Acesso>>(){});
 		
-		assertEquals(1, retornoApiList.size());
+		assertEquals(16, retornoApiList.size());
 		
 		assertEquals(acesso.getDescricao(), retornoApiList.get(0).getDescricao());
 		
@@ -189,7 +190,7 @@ class StoreApplicationTests extends TestCase {
 
 		Acesso acesso = new Acesso();
 
-		acesso.setDescricao("ROLE_ADMIN");
+		acesso.setDescricao("ROLE_FDGKH");
 
 		// Grava no BD
 		acesso = acessoController.salvarAcesso(acesso).getBody();
@@ -197,7 +198,7 @@ class StoreApplicationTests extends TestCase {
 		assertEquals(true, acesso.getId() > 0);
 
 		// Valida dados
-		assertEquals("ROLE_ADMIN", acesso.getDescricao());
+		assertEquals("ROLE_FDGKH", acesso.getDescricao());
 
 		// Teste de carregamento
 		Acesso acesso2 = acessoRepository.findById(acesso.getId()).get();

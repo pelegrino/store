@@ -36,7 +36,7 @@ public class Usuario implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usuario")
 	private Long id;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String login;
 	
 	@Column(nullable = false)
