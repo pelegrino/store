@@ -1,7 +1,6 @@
 package br.com.pelegrino.store;
 
 import java.util.Calendar;
-import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
