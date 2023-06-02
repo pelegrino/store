@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServiceSendEmail {
 	
-	private String userName = "onirgelep@gmail.com";
-	private String senha = "2Ap57lf!KDO7V";
+	private String userName = "seu@email.com";
+	private String senha = "senha";
 	
 	@Async
 	public void enviarEmailHtml(String assunto, String mensagem, String emailDestino) throws UnsupportedEncodingException, MessagingException {
@@ -28,10 +28,10 @@ public class ServiceSendEmail {
 		Properties properties = new Properties();
 		properties.put("mail.smtp.ssl.trust", "*");
 		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls", "false");
-		properties.put("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.port", "465");
-		properties.put("mail.smtp.socketFactory.port", "465");
+		properties.put("mail.smtp.starttls.enable", "true");
+		properties.put("mail.smtp.host", "smtp.office365.com");
+		properties.put("mail.smtp.port", "587");
+		properties.put("mail.smtp.socketFactory.port", "587");
 		properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		
 		Session session = Session.getInstance(properties, new Authenticator() {
@@ -52,7 +52,7 @@ public class ServiceSendEmail {
 		message.setFrom(new InternetAddress(userName, "Onirgelep", "UTF-8"));
 		message.setRecipients(Message.RecipientType.TO, toUser);
 		message.setSubject(assunto);
-		message.setContent(message, "text/html; charset=utf-8");
+		message.setContent(mensagem, "text/html; charset=utf-8");
 		
 		Transport.send(message);
 		
