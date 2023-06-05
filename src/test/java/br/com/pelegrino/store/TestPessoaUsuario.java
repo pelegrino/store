@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Profile;
 import br.com.pelegrino.store.controller.PessoaController;
 import br.com.pelegrino.store.enums.TipoEndereco;
 import br.com.pelegrino.store.model.Endereco;
+import br.com.pelegrino.store.model.PessoaFisica;
 import br.com.pelegrino.store.model.PessoaJuridica;
+import br.com.pelegrino.store.repository.PessoaRepository;
 import junit.framework.TestCase;
 
 @Profile("test")
@@ -21,8 +23,11 @@ public class TestPessoaUsuario extends TestCase {
 	@Autowired
 	private PessoaController pessoaController;
 	
+	@Autowired
+	private PessoaRepository pessoaRepository;
+	
 	@Test
-	public void testCadPessoaFisica() throws ExceptionStore {
+	public void testCadPessoaJuridica() throws ExceptionStore {
 		
 		PessoaJuridica pessoaJuridica = new PessoaJuridica();
 		pessoaJuridica.setCnpj("" + Calendar.getInstance().getTimeInMillis());
@@ -70,6 +75,57 @@ public class TestPessoaUsuario extends TestCase {
 		}
 		
 		assertEquals(2, pessoaJuridica.getEnderecos().size());
+		
+	}
+	
+	@Test
+	public void testCadPessoaFisica() throws ExceptionStore {
+		
+		PessoaJuridica pessoaJuridica = pessoaRepository.existeCnpjCadastrado("1685709292674");
+		
+		PessoaFisica pessoaFisica = new PessoaFisica();
+		pessoaFisica.setCpf("283.513.200-72");
+		pessoaFisica.setNome("Antenor");
+		pessoaFisica.setEmail("teste@teste6.com");
+		pessoaFisica.setTelefone("14997167515");
+		pessoaFisica.setEmpresa(pessoaJuridica);
+		
+		Endereco endereco1 = new Endereco();
+		endereco1.setBairro("Sta. Clara");
+		endereco1.setCep("17222-888");
+		endereco1.setComplemento("Casa");
+		endereco1.setNumero("889");
+		endereco1.setPessoa(pessoaFisica);
+		endereco1.setRuaLogradouro("Av. Tamoios");
+		endereco1.setTipoEndereco(TipoEndereco.COBRANCA);
+		endereco1.setUf("SP");
+		endereco1.setCidade("Tupã");
+		endereco1.setEmpresa(pessoaJuridica);
+		
+		Endereco endereco2 = new Endereco();
+		endereco2.setBairro("Centro");
+		endereco2.setCep("17222-998");
+		endereco2.setComplemento("Apartametno");
+		endereco2.setNumero("556");
+		endereco2.setPessoa(pessoaFisica);
+		endereco2.setRuaLogradouro("Av. Tabajaras");
+		endereco2.setTipoEndereco(TipoEndereco.ENTREGA);
+		endereco2.setUf("SP");
+		endereco2.setCidade("Tupã");
+		endereco2.setEmpresa(pessoaJuridica);
+		
+		pessoaFisica.getEnderecos().add(endereco1);
+		pessoaFisica.getEnderecos().add(endereco2);
+		
+		pessoaController.salvarPf(pessoaFisica);
+		
+		assertEquals(true, pessoaFisica.getId() > 0);
+		
+		for (Endereco endereco : pessoaFisica.getEnderecos()) {
+			assertEquals(true, endereco.getId() > 0);
+		}
+		
+		assertEquals(2, pessoaFisica.getEnderecos().size());
 		
 	}
 	
