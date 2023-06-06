@@ -1,5 +1,7 @@
 package br.com.pelegrino.store.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +33,7 @@ public class PessoaController {
 	
 	@ResponseBody
 	@PostMapping(value = "/salvarPj")
-	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody PessoaJuridica pessoaJuridica) throws ExceptionStore {
+	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws ExceptionStore {
 		
 		if (pessoaJuridica == null) {
 			throw new ExceptionStore("A Pessoa Jurídica não pode ser nula.");
@@ -58,7 +60,7 @@ public class PessoaController {
 	
 	@ResponseBody
 	@PostMapping(value = "/salvarPf")
-	public ResponseEntity<PessoaFisica> salvarPf(@RequestBody PessoaFisica pessoaFisica) throws ExceptionStore {
+	public ResponseEntity<PessoaFisica> salvarPf(@RequestBody @Valid PessoaFisica pessoaFisica) throws ExceptionStore {
 		
 		if (pessoaFisica == null) {
 			throw new ExceptionStore("A Pessoa Física não pode ser nula.");

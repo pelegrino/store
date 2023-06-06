@@ -9,6 +9,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 @Entity
 @Table(name = "pessoa_fisica")
 @PrimaryKeyJoinColumn(name = "id")
@@ -22,6 +24,7 @@ public class PessoaFisica extends Pessoa {
 	@Temporal(TemporalType.DATE)
 	private Date dataNascimento;
 
+	@CPF(message = "CPF está inválido.")
 	public String getCpf() {
 		return cpf;
 	}
