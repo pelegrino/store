@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pelegrino.store.ExceptionStore;
+import br.com.pelegrino.store.model.Endereco;
 import br.com.pelegrino.store.model.PessoaFisica;
 import br.com.pelegrino.store.model.PessoaJuridica;
 import br.com.pelegrino.store.model.dto.CepDTO;
+import br.com.pelegrino.store.repository.EnderecoRepository;
 import br.com.pelegrino.store.repository.PessoaFisicaRepository;
 import br.com.pelegrino.store.repository.PessoaRepository;
 import br.com.pelegrino.store.service.PessoaUserService;
@@ -33,6 +35,9 @@ public class PessoaController {
 	
 	@Autowired
 	private PessoaUserService pessoaUserService;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 	
 	@ResponseBody
 	@GetMapping(value = "/consultaCep/{cep}")
@@ -58,6 +63,37 @@ public class PessoaController {
 		
 		if (!ValidaCNPJ.isCNPJ(pessoaJuridica.getCnpj())) {
 			throw new ExceptionStore("CNPJ: " + pessoaJuridica.getCnpj() + "está inválido.");
+		}
+		
+		if (pessoaJuridica.getId() == null || pessoaJuridica.getId() <= 0) {
+			
+			for (int p = 0; p < pessoaJuridica.getEnderecos().size(); p++) {
+				
+				CepDTO cepDTO = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
+				
+				pessoaJuridica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
+				pessoaJuridica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
+				pessoaJuridica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
+				pessoaJuridica.getEnderecos().get(p).setRuaLogradouro(cepDTO.getLogradouro());
+				pessoaJuridica.getEnderecos().get(p).setUf(cepDTO.getUf());
+			}
+			
+		} else {
+			for (int p = 0; p < pessoaJuridica.getEnderecos().size(); p++) {
+				Endereco enderecoTemp = enderecoRepository.findById(pessoaJuridica.getEnderecos().get(p).getId()).get();
+				
+				if (!enderecoTemp.getCep().equals(pessoaJuridica.getEnderecos().get(p).getCep())) {
+					
+					CepDTO cepDTO = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
+					
+					pessoaJuridica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
+					pessoaJuridica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
+					pessoaJuridica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
+					pessoaJuridica.getEnderecos().get(p).setRuaLogradouro(cepDTO.getLogradouro());
+					pessoaJuridica.getEnderecos().get(p).setUf(cepDTO.getUf());
+					
+				}
+			}
 		}
 		
 		pessoaJuridica = pessoaUserService.salvarPessoaJuridica(pessoaJuridica);
