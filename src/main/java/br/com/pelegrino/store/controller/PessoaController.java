@@ -50,7 +50,7 @@ public class PessoaController {
 	public ResponseEntity<List<PessoaFisica>> consultaPfNome(@PathVariable("nome") String nome){
 		List<PessoaFisica> fisicas = pessoaFisicaRepository.pesquisaPorNomePF(nome.trim().toUpperCase());
 		
-		jdbcTemplate.execute("begin; UPDATE tabela_acesso_end_point SET qtd_acesso_end_point = qtd_acesso_end_point + 1; commit;");
+		jdbcTemplate.execute("begin; UPDATE tabela_acesso_end_point SET qtd_acesso_end_point = qtd_acesso_end_point + 1 where nome_end_point = 'END_POINT_NOME_PESSOA_FISICA'; commit;");
 		
 		return new ResponseEntity<List<PessoaFisica>>(fisicas, HttpStatus.OK);
 		
