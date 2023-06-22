@@ -7,7 +7,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +23,7 @@ import br.com.pelegrino.store.repository.EnderecoRepository;
 import br.com.pelegrino.store.repository.PessoaFisicaRepository;
 import br.com.pelegrino.store.repository.PessoaRepository;
 import br.com.pelegrino.store.service.PessoaUserService;
+import br.com.pelegrino.store.service.ServiceContagemAcessoApi;
 import br.com.pelegrino.store.util.ValidaCNPJ;
 import br.com.pelegrino.store.util.ValidaCPF;
 
@@ -43,14 +43,14 @@ public class PessoaController {
 	private EnderecoRepository enderecoRepository;
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private ServiceContagemAcessoApi serviceContagemAcessoApi;
 	
 	@ResponseBody
 	@GetMapping(value = "/consultaPfNome/{nome}")
 	public ResponseEntity<List<PessoaFisica>> consultaPfNome(@PathVariable("nome") String nome){
 		List<PessoaFisica> fisicas = pessoaFisicaRepository.pesquisaPorNomePF(nome.trim().toUpperCase());
 		
-		jdbcTemplate.execute("begin; UPDATE tabela_acesso_end_point SET qtd_acesso_end_point = qtd_acesso_end_point + 1 where nome_end_point = 'END_POINT_NOME_PESSOA_FISICA'; commit;");
+		serviceContagemAcessoApi.atualizaAcessoEndPointPF();
 		
 		return new ResponseEntity<List<PessoaFisica>>(fisicas, HttpStatus.OK);
 		
