@@ -12,7 +12,7 @@ public class ServiceContagemAcessoApi {
 	
 	public void atualizaAcessoEndPointPF() {
 		
-		jdbcTemplate.execute("begin; UPDATE tabela_acesso_end_point SET qtd_acesso_end_point = qtd_acesso_end_point + 1 where nome_end_point = 'END_POINT_NOME_PESSOA_FISICA'; commit;");
+		jdbcTemplate.execute("begin; UPDATE tabela_acesso_end_point SET qtd_acesso_end_point = qtd_acesso_end_point + 1 where nome_end_point = 'END-POINT-NOME-PESSOA-FISICA'; commit;");
 		
 	}
 
