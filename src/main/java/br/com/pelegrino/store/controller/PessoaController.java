@@ -152,6 +152,10 @@ public class PessoaController {
 			throw new ExceptionStore("A Pessoa Física não pode ser nula.");
 		}
 		
+		if (pessoaFisica.getTipoPessoa() == null) {
+			throw new ExceptionStore("Informe o tipo Jurídico ou Fornecedor.");
+		}
+		
 		if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null) {
 			throw new ExceptionStore("Já existe CNPJ cadastrado cadastrado com o número: " + pessoaFisica.getCpf());
 		}
