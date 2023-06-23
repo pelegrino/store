@@ -12,6 +12,7 @@ import br.com.pelegrino.store.model.PessoaFisica;
 import br.com.pelegrino.store.model.PessoaJuridica;
 import br.com.pelegrino.store.model.Usuario;
 import br.com.pelegrino.store.model.dto.CepDTO;
+import br.com.pelegrino.store.model.dto.ConsultaCnpjDto;
 import br.com.pelegrino.store.repository.PessoaFisicaRepository;
 import br.com.pelegrino.store.repository.PessoaRepository;
 import br.com.pelegrino.store.repository.UsuarioRepository;
@@ -153,6 +154,10 @@ public class PessoaUserService {
 	
 	public CepDTO consultaCep(String cep) {
 		return new RestTemplate().getForEntity("https://viacep.com.br/ws/" + cep + "/json/", CepDTO.class).getBody();
+	}
+	
+	public ConsultaCnpjDto consultaCnpjReceitaWS(String cnpj) {
+		return new RestTemplate().getForEntity("https://receitaws.com.br/v1/cnpj/" + cnpj, ConsultaCnpjDto.class).getBody();
 	}
 
 }

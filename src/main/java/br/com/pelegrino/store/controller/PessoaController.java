@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pelegrino.store.ExceptionStore;
+import br.com.pelegrino.store.enums.TipoPessoa;
 import br.com.pelegrino.store.model.Endereco;
 import br.com.pelegrino.store.model.PessoaFisica;
 import br.com.pelegrino.store.model.PessoaJuridica;
 import br.com.pelegrino.store.model.dto.CepDTO;
+import br.com.pelegrino.store.model.dto.ConsultaCnpjDto;
 import br.com.pelegrino.store.repository.EnderecoRepository;
 import br.com.pelegrino.store.repository.PessoaFisicaRepository;
 import br.com.pelegrino.store.repository.PessoaRepository;
@@ -45,13 +47,12 @@ public class PessoaController {
 	@Autowired
 	private ServiceContagemAcessoApi serviceContagemAcessoApi;
 	
+	
 	@ResponseBody
 	@GetMapping(value = "/consultaPfNome/{nome}")
 	public ResponseEntity<List<PessoaFisica>> consultaPfNome(@PathVariable("nome") String nome){
 		List<PessoaFisica> fisicas = pessoaFisicaRepository.pesquisaPorNomePF(nome.trim().toUpperCase());
-		
 		serviceContagemAcessoApi.atualizaAcessoEndPointPF();
-		
 		return new ResponseEntity<List<PessoaFisica>>(fisicas, HttpStatus.OK);
 		
 	}
@@ -87,11 +88,21 @@ public class PessoaController {
 	}
 	
 	@ResponseBody
+	@GetMapping(value = "/consultaCnpjReceitaWS/{cnpj}")
+	public ResponseEntity<ConsultaCnpjDto> consultaCnpjReceitaWS(@PathVariable("cnpj") String cnpj) {
+		return new ResponseEntity<ConsultaCnpjDto>(pessoaUserService.consultaCnpjReceitaWS(cnpj), HttpStatus.OK);
+	}
+	
+	@ResponseBody
 	@PostMapping(value = "/salvarPj")
 	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws ExceptionStore {
 		
 		if (pessoaJuridica == null) {
 			throw new ExceptionStore("A Pessoa Jurídica não pode ser nula.");
+		}
+		
+		if (pessoaJuridica.getTipoPessoa() == null) {
+			throw new ExceptionStore("Informe o tipo Jurídico ou Fornecedor.");
 		}
 		
 		if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null) {
@@ -109,9 +120,7 @@ public class PessoaController {
 		if (pessoaJuridica.getId() == null || pessoaJuridica.getId() <= 0) {
 			
 			for (int p = 0; p < pessoaJuridica.getEnderecos().size(); p++) {
-				
 				CepDTO cepDTO = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
-				
 				pessoaJuridica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
 				pessoaJuridica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
 				pessoaJuridica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
@@ -124,9 +133,7 @@ public class PessoaController {
 				Endereco enderecoTemp = enderecoRepository.findById(pessoaJuridica.getEnderecos().get(p).getId()).get();
 				
 				if (!enderecoTemp.getCep().equals(pessoaJuridica.getEnderecos().get(p).getCep())) {
-					
 					CepDTO cepDTO = pessoaUserService.consultaCep(pessoaJuridica.getEnderecos().get(p).getCep());
-					
 					pessoaJuridica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
 					pessoaJuridica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
 					pessoaJuridica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
@@ -138,7 +145,6 @@ public class PessoaController {
 		}
 		
 		pessoaJuridica = pessoaUserService.salvarPessoaJuridica(pessoaJuridica);
-		
 		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);
 		
 	}
@@ -153,7 +159,7 @@ public class PessoaController {
 		}
 		
 		if (pessoaFisica.getTipoPessoa() == null) {
-			throw new ExceptionStore("Informe o tipo Jurídico ou Fornecedor.");
+			pessoaFisica.setTipoPessoa(TipoPessoa.FISICA.name());
 		}
 		
 		if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null) {
@@ -165,7 +171,6 @@ public class PessoaController {
 		}
 		
 		pessoaFisica = pessoaUserService.salvarPessoaFisica(pessoaFisica);
-		
 		return new ResponseEntity<PessoaFisica>(pessoaFisica, HttpStatus.OK);
 		
 	}
