@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "produto")
@@ -27,32 +28,40 @@ public class Produto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_produto")
 	private Long id;
 	
+	@NotNull(message = "O tipo da unidade deve ser informado.")
 	@Column(nullable = false)
 	private String tipoUnidade;
 	
+	@NotNull(message = "Nome do Produto deve ser informado.")
 	@Column(nullable = false)
 	private String nome;
 	
 	@Column(nullable = false)
 	private Boolean ativo = Boolean.TRUE;
 	
+	@NotNull(message = "Descrição do produto deve ser informada.")
 	@Column(columnDefinition = "text", length = 2000, nullable = false)
 	private String descricao;
 	
 	// Item nota produto 
 	
+	@NotNull(message = "Peso do Produto deve ser informado.")
 	@Column(nullable = false)
 	private Double peso;
 	
+	@NotNull(message = "Largura do Produto deve ser informado.")
 	@Column(nullable = false)
 	private Double largura;
 	
+	@NotNull(message = "Altura do Produto deve ser informado.")
 	@Column(nullable = false)
 	private Double altura;
 	
+	@NotNull(message = "Profundidade do Produto deve ser informado.")
 	@Column(nullable = false)
 	private Double profundidade;
 	
+	@NotNull(message = "Valor da venda do Produto deve ser informada.")
 	@Column(nullable = false)
 	private BigDecimal valorVenda = BigDecimal.ZERO;
 	
@@ -67,15 +76,16 @@ public class Produto implements Serializable {
 	
 	private Integer qtdClique = 0;
 	
-	@ManyToOne(targetEntity = Pessoa.class)
+	@NotNull(message = "A empresa responsável deve ser informada.")
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa;
 
-	public Pessoa getEmpresa() {
+	public PessoaJuridica getEmpresa() {
 		return empresa;
 	}
 	
-	public void setEmpresa(Pessoa empresa) {
+	public void setEmpresa(PessoaJuridica empresa) {
 		this.empresa = empresa;
 	}
 	
