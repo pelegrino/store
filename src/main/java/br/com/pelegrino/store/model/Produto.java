@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "produto")
@@ -32,6 +33,7 @@ public class Produto implements Serializable {
 	@Column(nullable = false)
 	private String tipoUnidade;
 	
+	@Size(min = 10, message = "Nome do produto deve ter no mínimo 10 letras")
 	@NotNull(message = "Nome do Produto deve ser informado.")
 	@Column(nullable = false)
 	private String nome;
@@ -80,6 +82,16 @@ public class Produto implements Serializable {
 	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
 	private PessoaJuridica empresa;
+	
+	@NotNull(message = "A categoria do produto deve ser informada.")
+	@ManyToOne(targetEntity = CategoriaProduto.class)
+	@JoinColumn(name = "categoria_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "categoria_produto_id_fk"))
+	private CategoriaProduto categoriaProduto;
+	
+	@NotNull(message = "A marca do produto deve ser informada.")
+	@ManyToOne(targetEntity = MarcaProduto.class)
+	@JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
+	private MarcaProduto marcaProduto;
 
 	public PessoaJuridica getEmpresa() {
 		return empresa;
@@ -208,6 +220,23 @@ public class Produto implements Serializable {
 	public void setQtdClique(Integer qtdClique) {
 		this.qtdClique = qtdClique;
 	}
+	
+	public CategoriaProduto getCategoriaProduto() {
+		return categoriaProduto;
+	}
+
+	public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
+		this.categoriaProduto = categoriaProduto;
+	}
+	
+	public MarcaProduto getMarcaProduto() {
+		return marcaProduto;
+	}
+
+	public void setMarcaProduto(MarcaProduto marcaProduto) {
+		this.marcaProduto = marcaProduto;
+	}
+	
 
 	@Override
 	public int hashCode() {

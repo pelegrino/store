@@ -31,14 +31,26 @@ public class ProdutoController {
 	@PostMapping(value = "/salvarProduto")
 	public ResponseEntity<Produto> salvarProduto(@RequestBody @Valid Produto produto) throws ExceptionStore {
 		
+		if (produto.getEmpresa() == null || produto.getEmpresa().getId() <= 0) {
+			throw new ExceptionStore("Empresa responsável deve ser informada.");
+		}
+		
 		if (produto.getId() == null) {
 			
-			List<Produto> acessos = produtoRepository.buscaProdutoNome(produto.getNome().toUpperCase());
+			List<Produto> acessos = produtoRepository.buscaProdutoNome(produto.getNome().toUpperCase(), produto.getEmpresa().getId());
 			
 			if (!acessos.isEmpty()) {
 				throw new ExceptionStore("Já existe produto com a descrição: " + produto.getNome());
 				
 			}
+		}
+		
+		if (produto.getCategoriaProduto() == null || produto.getCategoriaProduto().getId() <= 0) {
+			throw new ExceptionStore("Categoria deve ser informada.");
+		}
+		
+		if (produto.getMarcaProduto() == null || produto.getMarcaProduto().getId() <= 0) {
+			throw new ExceptionStore("Marca deve ser informada.");
 		}
 		
 		Produto produtoSalvo = produtoRepository.save(produto);
