@@ -163,7 +163,7 @@ public class PessoaController {
 		}
 		
 		if (pessoaFisica.getId() == null && pessoaFisicaRepository.existeCpfCadastrado(pessoaFisica.getCpf()) != null) {
-			throw new ExceptionStore("Já existe CNPJ cadastrado cadastrado com o número: " + pessoaFisica.getCpf());
+			throw new ExceptionStore("Já existe CPF cadastrado cadastrado com o número: " + pessoaFisica.getCpf());
 		}
 		
 		if (!ValidaCPF.isCPF(pessoaFisica.getCpf())) {
