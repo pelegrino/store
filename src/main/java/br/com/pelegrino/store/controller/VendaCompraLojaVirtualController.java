@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -118,7 +119,11 @@ public class VendaCompraLojaVirtualController {
 	@GetMapping(value = "/consultaVendaId/{id}")
 	public ResponseEntity<VendaCompraLojaVirtualDTO> consultaVendaId(@PathVariable(value = "id") Long idVenda) {
 		
-		VendaCompraLojaVirtual compraLojaVirtual = vendaCompraLojaVirtualRepository.findById(idVenda).orElse(new VendaCompraLojaVirtual());
+		VendaCompraLojaVirtual compraLojaVirtual = vendaCompraLojaVirtualRepository.findByIdExclusao(idVenda);
+		
+		if (compraLojaVirtual == null) {
+			compraLojaVirtual = new VendaCompraLojaVirtual();
+		}
 		
 		VendaCompraLojaVirtualDTO compraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
 		compraLojaVirtualDTO.setValorTotal(compraLojaVirtual.getValorTotal());
@@ -152,4 +157,24 @@ public class VendaCompraLojaVirtualController {
 		
 	}
 
+	@ResponseBody
+	@DeleteMapping(value = "/deleteVendaTotalBanco2/{idVenda}")
+	public ResponseEntity<String> deleteVendaTotalBanco2(@PathVariable(value = "idVenda") Long idVenda) {
+		
+		vendaService.exclusaoTotalVendaBanco2(idVenda);
+		
+		return new ResponseEntity<String>("Venda excluída logicamente com sucesso.", HttpStatus.OK);
+		
+	}
+	
+	@ResponseBody
+	@PutMapping(value = "/ativaRegistroBanco/{idVenda}")
+	public ResponseEntity<String> ativaRegistroBanco(@PathVariable(value = "idVenda") Long idVenda) {
+		
+		vendaService.ativaRegistroBanco(idVenda);
+		
+		return new ResponseEntity<String>("Venda ativada com sucesso.", HttpStatus.OK);
+		
+	}
+	
 }
