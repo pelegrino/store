@@ -1,5 +1,8 @@
 package br.com.pelegrino.store.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,6 +177,46 @@ public class VendaCompraLojaVirtualController {
 		vendaService.ativaRegistroBanco(idVenda);
 		
 		return new ResponseEntity<String>("Venda ativada com sucesso.", HttpStatus.OK);
+		
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultaVendaPorProdutoId/{id}")
+	public ResponseEntity<List<VendaCompraLojaVirtualDTO>> consultaVendaPorProdutoId(@PathVariable(value = "id") Long idProd) {
+		
+		List<VendaCompraLojaVirtual> compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorProduto(idProd);
+		
+		if (compraLojaVirtual == null) {
+			compraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();
+		}
+		
+		List<VendaCompraLojaVirtualDTO> compraLojaVirtualDTOList = new ArrayList<VendaCompraLojaVirtualDTO>();
+		
+		for (VendaCompraLojaVirtual vcl : compraLojaVirtual) {
+		
+			VendaCompraLojaVirtualDTO compraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
+			compraLojaVirtualDTO.setValorTotal(vcl.getValorTotal());
+			compraLojaVirtualDTO.setPessoa(vcl.getPessoa());
+			compraLojaVirtualDTO.setCobranca(vcl.getEnderecoCobranca());
+			compraLojaVirtualDTO.setEntrega(vcl.getEnderecoEntrega());
+			compraLojaVirtualDTO.setValorDesconto(vcl.getValorDesconto());
+			compraLojaVirtualDTO.setValorFrete(vcl.getValorFrete());
+			compraLojaVirtualDTO.setId(vcl.getId());
+		
+			for(ItemVendaLoja item : vcl.getItemVendaLojas()) {
+				
+				ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
+				itemVendaDTO.setQuantidade(item.getQuantidade());
+				itemVendaDTO.setProduto(item.getProduto());
+				
+				compraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+			}
+			
+			compraLojaVirtualDTOList.add(compraLojaVirtualDTO);
+		
+		}
+		
+		return new ResponseEntity<List<VendaCompraLojaVirtualDTO>>(compraLojaVirtualDTOList, HttpStatus.OK);
 		
 	}
 	
