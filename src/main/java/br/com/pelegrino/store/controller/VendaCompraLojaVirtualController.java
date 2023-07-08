@@ -194,6 +194,15 @@ public class VendaCompraLojaVirtualController {
 		} else if (tipoconsulta.equalsIgnoreCase("POR_NOME_PROD")) {
 			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorNomeProduto(valor.toUpperCase().trim());
 			
+		} else if (tipoconsulta.equalsIgnoreCase("POR_NOME_CLIENTE")) {
+			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorNomeCliente(valor.toUpperCase().trim());
+			
+		} else if (tipoconsulta.equalsIgnoreCase("POR_ENDERECO_COBRANCA")) {
+			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorEnderecoCobranca(valor.toUpperCase().trim());
+			
+		} else if (tipoconsulta.equalsIgnoreCase("POR_ENDERECO_ENTREGA")) {
+			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorEnderecoEntrega(valor.toUpperCase().trim());
+			
 		}
 		
 		if (compraLojaVirtual == null) {
