@@ -1,6 +1,9 @@
 package br.com.pelegrino.store.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -179,6 +182,56 @@ public class VendaCompraLojaVirtualController {
 		return new ResponseEntity<String>("Venda ativada com sucesso.", HttpStatus.OK);
 		
 	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultaVendaDinamicaFaixaData/{data1}/{data2}")
+	public ResponseEntity<List<VendaCompraLojaVirtualDTO>> consultaVendaDinamicaFaixaData(
+			@PathVariable("data1") String data1,
+			@PathVariable("data2") String data2) throws ParseException {
+		
+		List<VendaCompraLojaVirtual> compraLojaVirtual = null;
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dddd");
+		
+		Date d1 = dateFormat.parse(data1);
+		Date d2 = dateFormat.parse(data2);
+		
+		compraLojaVirtual = vendaCompraLojaVirtualRepository.consultaVendaFaixaData(d1, d2);
+		
+		if (compraLojaVirtual == null) {
+			compraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();
+		}
+		
+		List<VendaCompraLojaVirtualDTO> compraLojaVirtualDTOList = new ArrayList<VendaCompraLojaVirtualDTO>();
+		
+		for (VendaCompraLojaVirtual vcl : compraLojaVirtual) {
+		
+			VendaCompraLojaVirtualDTO compraLojaVirtualDTO = new VendaCompraLojaVirtualDTO();
+			compraLojaVirtualDTO.setValorTotal(vcl.getValorTotal());
+			compraLojaVirtualDTO.setPessoa(vcl.getPessoa());
+			compraLojaVirtualDTO.setCobranca(vcl.getEnderecoCobranca());
+			compraLojaVirtualDTO.setEntrega(vcl.getEnderecoEntrega());
+			compraLojaVirtualDTO.setValorDesconto(vcl.getValorDesconto());
+			compraLojaVirtualDTO.setValorFrete(vcl.getValorFrete());
+			compraLojaVirtualDTO.setId(vcl.getId());
+		
+			for(ItemVendaLoja item : vcl.getItemVendaLojas()) {
+				
+				ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
+				itemVendaDTO.setQuantidade(item.getQuantidade());
+				itemVendaDTO.setProduto(item.getProduto());
+				
+				compraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+			}
+			
+			compraLojaVirtualDTOList.add(compraLojaVirtualDTO);
+		
+		}
+		
+		return new ResponseEntity<List<VendaCompraLojaVirtualDTO>>(compraLojaVirtualDTOList, HttpStatus.OK);
+		
+	}
+	
 	
 	@ResponseBody
 	@GetMapping(value = "/consultaVendaDinamica/{valor}/{tipoconsulta}")
