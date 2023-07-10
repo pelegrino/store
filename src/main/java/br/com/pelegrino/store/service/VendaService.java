@@ -1,23 +1,26 @@
 package br.com.pelegrino.store.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
-import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import br.com.pelegrino.store.model.VendaCompraLojaVirtual;
+import br.com.pelegrino.store.repository.VendaCompraLojaVirtualRepository;
 
 @Service
 public class VendaService {
 	
 	@Autowired
-	private EntityManager entityManager;
-
-	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository;
+	
 	
 	public void exclusaoTotalVendaBanco2(Long idVenda) {
 		String sql = "begin; update venda_compra_loja_virtual set excluido = true where id = " + idVenda + "; commit;";
@@ -44,15 +47,14 @@ public class VendaService {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
-	public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2){
+	public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2) throws ParseException{
 		
-		String sql = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
-				+ " where i.vendaCompraLojaVirtual.excluido = false "
-				+ " and i.vendaCompraLojaVirtual.dataVenda >= '" + data1 + "'"
-				+ " and i.vendaCompraLojaVirtual.dataVenda <= '" + data2 + "'";
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dddd");
 		
-		return entityManager.createQuery(sql).getResultList();
+		Date date1 = dateFormat.parse(data1);
+		Date date2 = dateFormat.parse(data2);
+		
+		return vendaCompraLojaVirtualRepository.consultaVendaFaixaData(date1, date2);
 		
 	}
 		
