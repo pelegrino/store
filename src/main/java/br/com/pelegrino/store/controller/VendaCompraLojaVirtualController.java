@@ -1,9 +1,7 @@
 package br.com.pelegrino.store.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -191,12 +189,12 @@ public class VendaCompraLojaVirtualController {
 		
 		List<VendaCompraLojaVirtual> compraLojaVirtual = null;
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dddd");
+		//SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dddd");
 		
-		Date d1 = dateFormat.parse(data1);
-		Date d2 = dateFormat.parse(data2);
+		//Date d1 = dateFormat.parse(data1);
+		//Date d2 = dateFormat.parse(data2);
 		
-		compraLojaVirtual = vendaCompraLojaVirtualRepository.consultaVendaFaixaData(d1, d2);
+		compraLojaVirtual = vendaService.consultaVendaFaixaData(data1, data2);
 		
 		if (compraLojaVirtual == null) {
 			compraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();
