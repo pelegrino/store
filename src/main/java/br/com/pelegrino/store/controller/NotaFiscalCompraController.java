@@ -17,13 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.pelegrino.store.ExceptionStore;
 import br.com.pelegrino.store.model.NotaFiscalCompra;
+import br.com.pelegrino.store.model.NotaFiscalVenda;
 import br.com.pelegrino.store.repository.NotaFiscalCompraRepository;
+import br.com.pelegrino.store.repository.NotaFiscalVendaRepository;
 
 @RestController
 public class NotaFiscalCompraController {
 
 	@Autowired
 	private NotaFiscalCompraRepository notaFiscalCompraRepository;
+	
+	@Autowired
+	private NotaFiscalVendaRepository notaFiscalVendaRepository;
 	
 	@ResponseBody
 	@GetMapping(value = "/buscarNotaFiscalPorDesc/{desc}")
@@ -32,6 +37,34 @@ public class NotaFiscalCompraController {
 		List<NotaFiscalCompra> notaFiscalCompras = notaFiscalCompraRepository.buscaNotaDesc(desc.toUpperCase().trim());
 		
 		return new ResponseEntity<List<NotaFiscalCompra>>(notaFiscalCompras, HttpStatus.OK);
+	
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/obterNotaFiscalCompraDaVenda/{idVenda}")
+	public ResponseEntity<List<NotaFiscalVenda>> obterNotaFiscalCompraDaVenda(@PathVariable("idVenda") Long idVenda) throws ExceptionStore {
+		
+		List<NotaFiscalVenda> notaFiscalVendas = notaFiscalVendaRepository.buscaNotaPorVenda(idVenda);
+		
+		if (notaFiscalVendas == null) {
+			throw new ExceptionStore("Não encontrou a nota fiscal de venda com o código: " + idVenda);
+		}
+		
+		return new ResponseEntity<List<NotaFiscalVenda>>(notaFiscalVendas, HttpStatus.OK);
+	
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/obterNotaFiscalCompraDaVendaUnica/{idVenda}")
+	public ResponseEntity<NotaFiscalVenda> obterNotaFiscalCompraDaVendaUnica(@PathVariable("idVenda") Long idVenda) throws ExceptionStore {
+		
+		NotaFiscalVenda notaFiscalVenda = notaFiscalVendaRepository.buscaNotaPorVendaUnica(idVenda);
+		
+		if (notaFiscalVenda == null) {
+			throw new ExceptionStore("Não encontrou a nota fiscal de venda com o código: " + idVenda);
+		}
+		
+		return new ResponseEntity<NotaFiscalVenda>(notaFiscalVenda, HttpStatus.OK);
 	
 	}
 	
